@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +11,7 @@
             margin: 0;
             padding: 0;
             background-color: #f0f8ff;
-            overflow: hidden; /* Prevent page scroll */
+            overflow: hidden;
         }
 
         /* Game container */
@@ -21,12 +20,11 @@
             width: 100%;
             height: 400px;
             background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif') no-repeat center center / cover;
-            overflow: hidden;
             margin: 0 auto;
             border: 2px solid #666;
         }
 
-        /* AngrySqueak (circle) */
+        /* AngrySqueak */
         #angrySqueak {
             width: 100px;
             height: 100px;
@@ -37,7 +35,7 @@
             transition: bottom 0.3s ease-out;
         }
 
-        /* Obstacle (square) */
+        /* Obstacle */
         .obstacle {
             width: 100px;
             height: 100px;
@@ -48,8 +46,8 @@
             animation: moveObstacle 4s linear infinite;
         }
 
-        /* Buttons and UI */
-        #start-game, #game-over {
+        /* Screens and Buttons */
+        #start-game, #game-over, #level-message {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -61,7 +59,7 @@
             text-align: center;
         }
 
-        #start-game button, #game-over button, #jump-button {
+        #start-game button, #game-over button, #level-message button {
             background-color: #ff6600;
             border: none;
             padding: 10px 20px;
@@ -71,129 +69,75 @@
             border-radius: 10px;
         }
 
-        /* Mobile Touch Controls */
-        #touch-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
+        .hidden { display: none; }
 
-        #jump-button {
-            width: 120px;
-            height: 50px;
-        }
-
-        /* Media query for landscape orientation */
-        @media (orientation: landscape) {
-            #game {
-                height: 70vh; /* Adjust game size */
-            }
-
-            #touch-controls {
-                bottom: 5%; /* Keep the jump button below the game */
-            }
-        }
-
+        /* Obstacle Animation */
         @keyframes moveObstacle {
-            from {
-                right: -50px;
-            }
-            to {
-                right: 100%;
-            }
+            from { right: -50px; }
+            to { right: 100%; }
         }
     </style>
 </head>
 <body>
-    <main>
-        <div id="game">
-            <div id="angrySqueak"></div>
-            <div class="obstacle"></div>
-            <div id="start-game">
-                <p>Start the Game</p>
-                <button id="start">Start</button>
-            </div>
-            <div id="game-over" style="display: none;">
-                <p>Game Over</p>
-                <button id="restart">Play Again</button>
-            </div>
-        </div>
-        <div id="touch-controls">
-            <button id="jump-button">Jump</button>
-        </div>
-    </main>
+    <div id="game">
+        <div id="angrySqueak"></div>
+        <div class="obstacle"></div>
+        <div id="start-game"><p>Start the Game</p><button id="start">Start</button></div>
+        <div id="game-over" style="display: none;"><p>Game Over</p><button id="restart">Play Again</button></div>
+        <div id="level-message" style="display:none;"><p id="level-text"></p><button id="continue">Continue</button></div>
+    </div>
     <script>
         const angrySqueak = document.getElementById('angrySqueak');
         const obstacle = document.querySelector('.obstacle');
+        const startScreen = document.getElementById('start-game');
         const gameOverScreen = document.getElementById('game-over');
         const restartButton = document.getElementById('restart');
-        const startScreen = document.getElementById('start-game');
         const startButton = document.getElementById('start');
-        const jumpButton = document.getElementById('jump-button');
+        const levelMessage = document.getElementById('level-message');
+        const levelText = document.getElementById('level-text');
 
-        let isGameOver = false;
+        let isGameOver = false, jumpCount = 0;
         const jumpHeight = 250;
-        const groundLevel = 50;
 
-        const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/AngrySqueak%202.MP3');
+        const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/main/AngrySqueak%202.MP3');
+        const backgroundMusic = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/main/Hucksters,%20fruadsters%20checks%20notes%20scam%20artists.MP3');
+        backgroundMusic.loop = true;
 
         function jump() {
             if (!angrySqueak.classList.contains('jumping')) {
                 angrySqueak.classList.add('jumping');
                 angrySqueak.style.bottom = `${jumpHeight}px`;
-                jumpSound.currentTime = 0;
                 jumpSound.play();
                 setTimeout(() => {
-                    angrySqueak.style.bottom = `${groundLevel}px`;
+                    angrySqueak.style.bottom = `50px`;
                     angrySqueak.classList.remove('jumping');
+                    checkLevel();
                 }, 500);
             }
         }
 
-        // Event listeners for jumping
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !isGameOver) jump();
-        });
-
-        jumpButton.addEventListener('touchstart', jump);
-        jumpButton.addEventListener('click', jump);
+        function checkLevel() {
+            jumpCount++;
+            const levels = [
+                "Level 1: You are not a Huckster!",
+                "Level 2: You are not a Fraudster!",
+                "Level 3: You are not a Scam Artist!",
+                "Level 4: You are not a Ponzi Scheme!"
+            ];
+            if (jumpCount % 10 === 0 && jumpCount / 10 <= levels.length) {
+                isGameOver = true;
+                levelText.innerText = levels[jumpCount / 10 - 1];
+                levelMessage.style.display = 'block';
+                obstacle.style.animationPlayState = 'paused';
+            }
+        }
 
         startButton.addEventListener('click', () => {
             startScreen.style.display = 'none';
-            resetGame();
+            backgroundMusic.play();
         });
-
-        function checkCollision() {
-            const offset = 20;
-            const angrySqueakRect = angrySqueak.getBoundingClientRect();
-            const obstacleRect = obstacle.getBoundingClientRect();
-
-            if (
-                angrySqueakRect.right - offset > obstacleRect.left + offset &&
-                angrySqueakRect.left + offset < obstacleRect.right - offset &&
-                angrySqueakRect.bottom - offset > obstacleRect.top + offset &&
-                angrySqueakRect.top + offset < obstacleRect.bottom - offset
-            ) endGame();
-        }
-
-        function endGame() {
-            isGameOver = true;
-            obstacle.style.animationPlayState = 'paused';
-            gameOverScreen.style.display = 'block';
-        }
-
-        restartButton.addEventListener('click', () => {
-            location.reload();
-        });
-
-        function resetGame() {
-            isGameOver = false;
-            obstacle.style.animationPlayState = 'running';
-        }
-
-        setInterval(checkCollision, 50);
+        restartButton.addEventListener('click', () => location.reload());
+        document.addEventListener('keydown', e => e.code === 'Space' && !isGameOver && jump());
     </script>
 </body>
 </html>
