@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngrySqueak Game</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            overflow: hidden; /* Prevent page scroll */
+        }
+
+        /* Game container */
+        #game {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif') no-repeat center center / cover;
+            overflow: hidden;
+            margin: 0 auto;
+            border: 2px solid #666;
+        }
+
+        /* AngrySqueak (circle) */
+        #angrySqueak {
+            width: 100px;
+            height: 100px;
+            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif') no-repeat center center / contain;
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            transition: bottom 0.3s ease-out;
+        }
+
+        /* Obstacle (square) */
+        .obstacle {
+            width: 100px;
+            height: 100px;
+            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif') no-repeat center center / contain;
+            position: absolute;
+            bottom: 50px;
+            right: -50px;
+            animation: moveObstacle 4s linear infinite;
+        }
+
+        /* Buttons and UI */
+        #start-game, #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #start-game button, #game-over button, #jump-button {
+            background-color: #ff6600;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        /* Mobile Touch Controls */
+        #touch-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        #jump-button {
+            width: 120px;
+            height: 50px;
+        }
+
+        /* Media query for landscape orientation */
+        @media (orientation: landscape) {
+            #game {
+                height: 70vh; /* Adjust game size */
+            }
+
+            #touch-controls {
+                bottom: 5%; /* Keep the jump button below the game */
+            }
+        }
+
+        @keyframes moveObstacle {
+            from {
+                right: -50px;
+            }
+            to {
+                right: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div id="game">
+            <div id="angrySqueak"></div>
+            <div class="obstacle"></div>
+            <div id="start-game">
+                <p>Start the Game</p>
+                <button id="start">Start</button>
+            </div>
+            <div id="game-over" style="display: none;">
+                <p>Game Over</p>
+                <button id="restart">Play Again</button>
+            </div>
+        </div>
+        <div id="touch-controls">
+            <button id="jump-button">Jump</button>
+        </div>
+    </main>
+    <script>
+        const angrySqueak = document.getElementById('angrySqueak');
+        const obstacle = document.querySelector('.obstacle');
+        const gameOverScreen = document.getElementById('game-over');
+        const restartButton = document.getElementById('restart');
+        const startScreen = document.getElementById('start-game');
+        const startButton = document.getElementById('start');
+        const jumpButton = document.getElementById('jump-button');
+
+        let isGameOver = false;
+        const jumpHeight = 250;
+        const groundLevel = 50;
+
+        const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/AngrySqueak%202.MP3');
+
+        function jump() {
+            if (!angrySqueak.classList.contains('jumping')) {
+                angrySqueak.classList.add('jumping');
+                angrySqueak.style.bottom = `${jumpHeight}px`;
+                jumpSound.currentTime = 0;
+                jumpSound.play();
+                setTimeout(() => {
+                    angrySqueak.style.bottom = `${groundLevel}px`;
+                    angrySqueak.classList.remove('jumping');
+                }, 500);
+            }
+        }
+
+        // Event listeners for jumping
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !isGameOver) jump();
+        });
+
+        jumpButton.addEventListener('touchstart', jump);
+        jumpButton.addEventListener('click', jump);
+
+        startButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            resetGame();
+        });
+
+        function checkCollision() {
+            const offset = 20;
+            const angrySqueakRect = angrySqueak.getBoundingClientRect();
+            const obstacleRect = obstacle.getBoundingClientRect();
+
+            if (
+                angrySqueakRect.right - offset > obstacleRect.left + offset &&
+                angrySqueakRect.left + offset < obstacleRect.right - offset &&
+                angrySqueakRect.bottom - offset > obstacleRect.top + offset &&
+                angrySqueakRect.top + offset < obstacleRect.bottom - offset
+            ) endGame();
+        }
+
+        function endGame() {
+            isGameOver = true;
+            obstacle.style.animationPlayState = 'paused';
+            gameOverScreen.style.display = 'block';
+        }
+
+        restartButton.addEventListener('click', () => {
+            location.reload();
+        });
+
+        function resetGame() {
+            isGameOver = false;
+            obstacle.style.animationPlayState = 'running';
+        }
+
+        setInterval(checkCollision, 50);
+    </script>
+</body>
+</html>
