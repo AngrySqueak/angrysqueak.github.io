@@ -5,49 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AngrySqueak Game</title>
     <style>
-        /* General styles */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
             overflow: hidden;
         }
 
-        /* Game container */
-        #game {
+        canvas {
+            display: block;
+            width: 100%;
+            height: calc(100vh - 60px);
+        }
+
+        #game-container {
             position: relative;
             width: 100%;
-            height: 400px;
-            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif') no-repeat center center / cover;
-            margin: 0 auto;
-            border: 2px solid #666;
+            height: 100vh;
+            background-image: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif');
+            background-size: cover;
+            overflow: hidden;
         }
 
-        /* AngrySqueak */
-        #angrySqueak {
-            width: 100px;
-            height: 100px;
-            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif') no-repeat center center / contain;
+        .social-icons {
             position: absolute;
-            bottom: 50px;
-            left: 50px;
-            transition: bottom 0.3s ease-out;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
         }
 
-        /* Obstacle */
-        .obstacle {
-            width: 100px;
-            height: 100px;
-            background: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif') no-repeat center center / contain;
+        .social-icons a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #mute-button, #difficulty-button, #start-button {
             position: absolute;
-            bottom: 50px;
-            right: -50px;
-            animation: moveObstacle 4s linear infinite;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background-color: #ff5722;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        /* Screens and Buttons */
-        #start-game, #game-over, #level-message {
+        #difficulty-button {
+            right: 100px;
+        }
+
+        #start-button {
+            right: 200px;
+        }
+
+        #jump-button {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        #game-over, #level-up {
+            display: none;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -55,89 +87,299 @@
             background: rgba(0, 0, 0, 0.8);
             color: white;
             padding: 20px;
-            border-radius: 10px;
             text-align: center;
+            border-radius: 10px;
         }
 
-        #start-game button, #game-over button, #level-message button {
-            background-color: #ff6600;
-            border: none;
+        #play-again, #continue-level {
+            margin-top: 10px;
             padding: 10px 20px;
+            background-color: #ff5722;
+            border: none;
             color: white;
             font-size: 16px;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 5px;
         }
 
-        .hidden { display: none; }
-
-        /* Obstacle Animation */
-        @keyframes moveObstacle {
-            from { right: -50px; }
-            to { right: 100%; }
+        #celebration-screen {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 128, 0, 0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="game">
-        <div id="angrySqueak"></div>
-        <div class="obstacle"></div>
-        <div id="start-game"><p>Start the Game</p><button id="start">Start</button></div>
-        <div id="game-over" style="display: none;"><p>Game Over</p><button id="restart">Play Again</button></div>
-        <div id="level-message" style="display:none;"><p id="level-text"></p><button id="continue">Continue</button></div>
+
+<div id="game-container">
+    <div class="social-icons">
+        <a href="https://x.com/AngrySqueak" target="_blank">Twitter</a>
+        <a href="https://linktr.ee/angrysqueak" target="_blank">Buy Token</a>
+        <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">Instagram</a>
     </div>
-    <script>
-        const angrySqueak = document.getElementById('angrySqueak');
-        const obstacle = document.querySelector('.obstacle');
-        const startScreen = document.getElementById('start-game');
-        const gameOverScreen = document.getElementById('game-over');
-        const restartButton = document.getElementById('restart');
-        const startButton = document.getElementById('start');
-        const levelMessage = document.getElementById('level-message');
-        const levelText = document.getElementById('level-text');
 
-        let isGameOver = false, jumpCount = 0;
-        const jumpHeight = 250;
+    <button id="mute-button">Mute</button>
+    <button id="difficulty-button">Easy</button>
+    <button id="start-button">Start</button>
+    <button id="jump-button">Jump</button>
 
-        const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/main/AngrySqueak%202.MP3');
-        const backgroundMusic = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/main/Hucksters,%20fruadsters%20checks%20notes%20scam%20artists.MP3');
-        backgroundMusic.loop = true;
+    <canvas id="gameCanvas"></canvas>
 
-        function jump() {
-            if (!angrySqueak.classList.contains('jumping')) {
-                angrySqueak.classList.add('jumping');
-                angrySqueak.style.bottom = `${jumpHeight}px`;
-                jumpSound.play();
-                setTimeout(() => {
-                    angrySqueak.style.bottom = `50px`;
-                    angrySqueak.classList.remove('jumping');
-                    checkLevel();
-                }, 500);
+    <div id="game-over">
+        <h2>Game Over</h2>
+        <button id="play-again">Play Again</button>
+    </div>
+
+    <div id="level-up">
+        <h2 id="level-message"></h2>
+        <button id="continue-level">Continue</button>
+    </div>
+
+    <div id="celebration-screen">
+        <h2>Congratulations!</h2>
+        <p>You finished all levels!</p>
+        <ul>
+            <li>Level 1: "You are not a Huckster!"</li>
+            <li>Level 2: "You are not a Fraudster!"</li>
+            <li>Level 3: "You are not a Scam Artist!"</li>
+            <li>Level 4: "You are not a Ponzi Scheme!"</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameContainer = document.getElementById('game-container');
+    const gameOverScreen = document.getElementById('game-over');
+    const playAgainButton = document.getElementById('play-again');
+    const levelUpScreen = document.getElementById('level-up');
+    const levelMessage = document.getElementById('level-message');
+    const continueLevelButton = document.getElementById('continue-level');
+    const celebrationScreen = document.getElementById('celebration-screen');
+    const muteButton = document.getElementById('mute-button');
+    const jumpButton = document.getElementById('jump-button');
+    const difficultyButton = document.getElementById('difficulty-button');
+    const startButton = document.getElementById('start-button');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/AngrySqueak%202.MP3');
+    const backgroundMusic = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/Hucksters,%20fruadsters%20checks%20notes%20scam%20artists.MP3');
+    backgroundMusic.loop = true;
+
+    let isMuted = false;
+    let currentDifficulty = 'easy';
+    let gameStarted = false;
+    const difficultySpeeds = {
+        easy: 5,
+        medium: 8,
+        hard: 12,
+    };
+
+    const levelMessages = [
+        "You are not a Huckster!",
+        "You are not a Fraudster!",
+        "You are not a Scam Artist!",
+        "You are not a Ponzi Scheme!"
+    ];
+
+    const angrySqueak = {
+        x: 100,
+        y: canvas.height / 2,
+        radius: 25,
+        dy: 0,
+        gravity: 0.5,
+        jumpStrength: -10,
+        image: new Image(),
+        scale: 1.5 // Scale factor for the visible image
+    };
+    angrySqueak.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif';
+
+    const gary = {
+        x: canvas.width,
+        y: Math.random() * (canvas.height - 50),
+        width: 50,
+        height: 50,
+        speed: difficultySpeeds.easy,
+        image: new Image(),
+        scale: 1.5 // Scale factor for the visible image
+    };
+    gary.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif';
+
+    let isGameOver = false;
+    let successfulCycles = 0;
+    let currentLevel = 1;
+    let garyCrossed = false; // Track if Gary has crossed
+
+    muteButton.addEventListener('click', () => {
+        isMuted = !isMuted;
+        backgroundMusic.muted = isMuted;
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+    });
+
+    difficultyButton.addEventListener('click', () => {
+        if (currentDifficulty === 'easy') {
+            currentDifficulty = 'medium';
+            difficultyButton.textContent = 'Medium';
+        } else if (currentDifficulty === 'medium') {
+            currentDifficulty = 'hard';
+            difficultyButton.textContent = 'Hard';
+        } else {
+            currentDifficulty = 'easy';
+            difficultyButton.textContent = 'Easy';
+        }
+        gary.speed = difficultySpeeds[currentDifficulty];
+    });
+
+    startButton.addEventListener('click', () => {
+        if (!gameStarted) {
+            gameStarted = true;
+            if (!isMuted) backgroundMusic.play();
+            update();
+        }
+    });
+
+    jumpButton.addEventListener('click', jumpAction);
+
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+            jumpAction();
+        }
+    });
+
+    function jumpAction() {
+        angrySqueak.dy = angrySqueak.jumpStrength;
+        if (!isMuted) jumpSound.play();
+    }
+
+    function drawAngrySqueak() {
+        ctx.drawImage(
+            angrySqueak.image,
+            angrySqueak.x - angrySqueak.radius * angrySqueak.scale,
+            angrySqueak.y - angrySqueak.radius * angrySqueak.scale,
+            angrySqueak.radius * 2 * angrySqueak.scale,
+            angrySqueak.radius * 2 * angrySqueak.scale
+        );
+    }
+
+    function drawGary() {
+        ctx.drawImage(
+            gary.image,
+            gary.x,
+            gary.y,
+            gary.width * gary.scale,
+            gary.height * gary.scale
+        );
+    }
+
+    function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (!gameStarted) {
+            drawAngrySqueak(); // Continuously ensure AngrySqueak is visible
+            return;
+        }
+
+        angrySqueak.y += angrySqueak.dy;
+        angrySqueak.dy += angrySqueak.gravity;
+
+        if (angrySqueak.y + angrySqueak.radius > canvas.height) {
+            angrySqueak.y = canvas.height - angrySqueak.radius;
+            angrySqueak.dy = 0;
+        }
+
+        gary.x -= gary.speed;
+
+        if (gary.x + gary.width <= 0) {
+            gary.x = canvas.width;
+            gary.y = Math.random() * (canvas.height - 50);
+            garyCrossed = false; // Reset crossing flag
+        }
+
+        if (
+            !garyCrossed && // Only count once per crossing
+            angrySqueak.x + angrySqueak.radius > gary.x &&
+            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
+            angrySqueak.y + angrySqueak.radius < gary.y
+        ) {
+            successfulCycles++;
+            garyCrossed = true; // Mark this crossing as counted
+
+            if (successfulCycles === 10) {
+                levelUp();
             }
         }
 
-        function checkLevel() {
-            jumpCount++;
-            const levels = [
-                "Level 1: You are not a Huckster!",
-                "Level 2: You are not a Fraudster!",
-                "Level 3: You are not a Scam Artist!",
-                "Level 4: You are not a Ponzi Scheme!"
-            ];
-            if (jumpCount % 10 === 0 && jumpCount / 10 <= levels.length) {
-                isGameOver = true;
-                levelText.innerText = levels[jumpCount / 10 - 1];
-                levelMessage.style.display = 'block';
-                obstacle.style.animationPlayState = 'paused';
-            }
+        if (
+            angrySqueak.x + angrySqueak.radius > gary.x &&
+            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
+            angrySqueak.y + angrySqueak.radius > gary.y &&
+            angrySqueak.y - angrySqueak.radius < gary.y + gary.height
+        ) {
+            isGameOver = true;
+            gameOverScreen.style.display = 'block';
+            backgroundMusic.pause();
         }
 
-        startButton.addEventListener('click', () => {
-            startScreen.style.display = 'none';
-            backgroundMusic.play();
-        });
-        restartButton.addEventListener('click', () => location.reload());
-        document.addEventListener('keydown', e => e.code === 'Space' && !isGameOver && jump());
-    </script>
+        drawAngrySqueak();
+        drawGary();
+
+        requestAnimationFrame(update);
+    }
+
+    function levelUp() {
+        backgroundMusic.pause();
+        levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
+        levelUpScreen.style.display = 'block';
+        gary.speed = 0;
+        gary.x = canvas.width + gary.width; // Move Gary off-screen to avoid collisions
+        successfulCycles = 0; // Reset for the next level
+    }
+
+    continueLevelButton.addEventListener('click', () => {
+        // Reset Gary's speed to match the current difficulty
+        gary.speed = difficultySpeeds[currentDifficulty];
+        
+        levelUpScreen.style.display = 'none';
+        currentLevel++;
+        if (currentLevel > 4) {
+            showCelebrationScreen();
+        } else {
+            if (!isMuted) backgroundMusic.play();
+            update();
+        }
+    });
+
+    function showCelebrationScreen() {
+        celebrationScreen.style.display = 'block';
+    }
+
+    function resetGame() {
+        isGameOver = false;
+        successfulCycles = 0;
+        currentLevel = 1;
+        gameStarted = false;
+        gameOverScreen.style.display = 'none';
+        levelUpScreen.style.display = 'none';
+        celebrationScreen.style.display = 'none';
+        angrySqueak.y = canvas.height / 2;
+        angrySqueak.dy = 0;
+        gary.x = canvas.width;
+        gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+
+</script>
 </body>
 </html>
