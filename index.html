@@ -63,22 +63,6 @@
             right: 200px;
         }
 
-        #jump-button {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            background-color: #4caf50;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            opacity: 0.8;
-        }
-
         #game-over, #level-up {
             display: none;
             position: absolute;
@@ -129,7 +113,6 @@
     <button id="mute-button">Mute</button>
     <button id="difficulty-button">Easy</button>
     <button id="start-button">Start</button>
-    <button id="jump-button">Jump</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -166,7 +149,6 @@
     const continueLevelButton = document.getElementById('continue-level');
     const celebrationScreen = document.getElementById('celebration-screen');
     const muteButton = document.getElementById('mute-button');
-    const jumpButton = document.getElementById('jump-button');
     const difficultyButton = document.getElementById('difficulty-button');
     const startButton = document.getElementById('start-button');
 
@@ -210,7 +192,7 @@
         y: Math.random() * (canvas.height - 50),
         width: 50,
         height: 50,
-        speed: difficultySpeeds.easy,
+        speed: 0,
         image: new Image(),
         scale: 1.5 // Scale factor for the visible image
     };
@@ -238,23 +220,29 @@
             currentDifficulty = 'easy';
             difficultyButton.textContent = 'Easy';
         }
-        gary.speed = difficultySpeeds[currentDifficulty];
+        if (gameStarted) {
+            gary.speed = difficultySpeeds[currentDifficulty];
+        }
     });
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
+            gary.speed = difficultySpeeds[currentDifficulty]; // Enforce difficulty at the start
             gameStarted = true;
             if (!isMuted) backgroundMusic.play();
-            update();
+            requestAnimationFrame(update);
         }
     });
-
-    jumpButton.addEventListener('click', jumpAction);
 
     document.addEventListener('keydown', (event) => {
         if (event.code === 'Space') {
             jumpAction();
         }
+    });
+
+    // Add event listener for touch (tap) input
+    canvas.addEventListener('touchstart', (event) => {
+        jumpAction();
     });
 
     function jumpAction() {
@@ -320,7 +308,7 @@
             angrySqueak.dy = 0;
         }
 
-        gary.x -= gary.speed;
+        gary.x -= gary.speed; // Consistent speed based on difficulty
 
         if (gary.x + gary.width <= 0) {
             gary.x = canvas.width;
@@ -363,20 +351,20 @@
         backgroundMusic.pause();
         levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
         levelUpScreen.style.display = 'block';
-        gary.speed = 0;
+        gary.speed = 0; // Stop Gary's movement
         gary.x = canvas.width + gary.width; // Move Gary off-screen to avoid collisions
         successfulCycles = 0; // Reset for the next level
     }
 
     continueLevelButton.addEventListener('click', () => {
-        gary.speed = difficultySpeeds[currentDifficulty];
+        gary.speed = difficultySpeeds[currentDifficulty]; // Resume Gary's speed based on current difficulty
         levelUpScreen.style.display = 'none';
         currentLevel++;
         if (currentLevel > 4) {
             showCelebrationScreen();
         } else {
             if (!isMuted) backgroundMusic.play();
-            update();
+            requestAnimationFrame(update);
         }
     });
 
