@@ -32,14 +32,17 @@
             top: 10px;
             left: 10px;
             z-index: 10;
+            display: flex;
+            gap: 10px;
         }
 
         .social-icons a {
-            margin: 0 5px;
             text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
+        }
+
+        .social-icons img {
+            width: 32px;
+            height: 32px;
         }
 
         #mute-button, #difficulty-button, #start-button {
@@ -105,9 +108,18 @@
 
 <div id="game-container">
     <div class="social-icons">
-        <a href="https://x.com/AngrySqueak" target="_blank">Twitter</a>
-        <a href="https://linktr.ee/angrysqueak" target="_blank">Buy Token</a>
-        <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">Instagram</a>
+        <a href="https://x.com/AngrySqueak" target="_blank">
+            <img src="https://path/to/twitter-icon.png" alt="Twitter Icon">
+        </a>
+        <a href="https://linktr.ee/angrysqueak" target="_blank">
+            <img src="https://path/to/angrysqueak-token-icon.gif" alt="AngrySqueak Token">
+        </a>
+        <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
+            <img src="https://path/to/instagram-icon.png" alt="Instagram Icon">
+        </a>
+        <a href="https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/angrysqueak_whitepaper.html" target="_blank">
+            <img src="https://path/to/whitepaper-icon.png" alt="White Paper">
+        </a>
     </div>
 
     <button id="mute-button">Mute</button>
@@ -183,7 +195,7 @@
         gravity: 0.5,
         jumpStrength: -10,
         image: new Image(),
-        scale: 1.5 // Scale factor for the visible image
+        scale: 1.5
     };
     angrySqueak.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif';
 
@@ -194,14 +206,14 @@
         height: 50,
         speed: 0,
         image: new Image(),
-        scale: 1.5 // Scale factor for the visible image
+        scale: 1.5
     };
     gary.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif';
 
     let isGameOver = false;
     let successfulCycles = 0;
     let currentLevel = 1;
-    let garyCrossed = false; // Track if Gary has crossed
+    let garyCrossed = false;
 
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
@@ -226,22 +238,17 @@
     });
 
     function initializeLevel(levelNumber) {
-        // Update level-specific messages
         levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
+        gary.speed = 0;
+        gary.x = canvas.width + gary.width;
+        successfulCycles = 0;
 
-        // Reset level state
-        gary.speed = 0; // Ensure Gary doesn't move until "Start" or "Continue"
-        gary.x = canvas.width + gary.width; // Move Gary off-screen
-        successfulCycles = 0; // Reset cycle counter
-
-        // Display level-up or start screen
         if (levelNumber === 1) {
             startButton.style.display = 'block';
         } else {
             levelUpScreen.style.display = 'block';
         }
 
-        // Celebration screen after Level 4
         if (levelNumber > 4) {
             showCelebrationScreen();
         }
@@ -249,7 +256,7 @@
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
-            gary.speed = difficultySpeeds[currentDifficulty]; // Enforce difficulty at the start
+            gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
             startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
@@ -261,7 +268,7 @@
         currentLevel++;
         initializeLevel(currentLevel);
         levelUpScreen.style.display = 'none';
-        gary.speed = difficultySpeeds[currentDifficulty]; // Resume Gary's speed
+        gary.speed = difficultySpeeds[currentDifficulty];
 
         if (!isMuted) backgroundMusic.play();
         requestAnimationFrame(update);
@@ -308,12 +315,12 @@
         if (isPortrait) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            angrySqueak.scale = 1.2; // Adjust scaling for portrait mode
+            angrySqueak.scale = 1.2;
             gary.scale = 1.2;
         } else {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            angrySqueak.scale = 1.5; // Default scaling for landscape mode
+            angrySqueak.scale = 1.5;
             gary.scale = 1.5;
         }
 
@@ -382,9 +389,9 @@
         backgroundMusic.pause();
         levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
         levelUpScreen.style.display = 'block';
-        gary.speed = 0; // Stop Gary's movement
-        gary.x = canvas.width + gary.width; // Move Gary off-screen to avoid collisions
-        successfulCycles = 0; // Reset for the next level
+        gary.speed = 0;
+        gary.x = canvas.width + gary.width;
+        successfulCycles = 0;
     }
 
     function showCelebrationScreen() {
