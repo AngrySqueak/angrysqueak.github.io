@@ -225,13 +225,46 @@
         }
     });
 
+    function initializeLevel(levelNumber) {
+        // Update level-specific messages
+        levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
+
+        // Reset level state
+        gary.speed = 0; // Ensure Gary doesn't move until "Start" or "Continue"
+        gary.x = canvas.width + gary.width; // Move Gary off-screen
+        successfulCycles = 0; // Reset cycle counter
+
+        // Display level-up or start screen
+        if (levelNumber === 1) {
+            startButton.style.display = 'block';
+        } else {
+            levelUpScreen.style.display = 'block';
+        }
+
+        // Celebration screen after Level 4
+        if (levelNumber > 4) {
+            showCelebrationScreen();
+        }
+    }
+
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty]; // Enforce difficulty at the start
             gameStarted = true;
+            startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
         }
+    });
+
+    continueLevelButton.addEventListener('click', () => {
+        currentLevel++;
+        initializeLevel(currentLevel);
+        levelUpScreen.style.display = 'none';
+        gary.speed = difficultySpeeds[currentDifficulty]; // Resume Gary's speed
+
+        if (!isMuted) backgroundMusic.play();
+        requestAnimationFrame(update);
     });
 
     document.addEventListener('keydown', (event) => {
@@ -240,8 +273,7 @@
         }
     });
 
-    // Add event listener for touch (tap) input
-    canvas.addEventListener('touchstart', (event) => {
+    canvas.addEventListener('touchstart', () => {
         jumpAction();
     });
 
@@ -308,22 +340,21 @@
             angrySqueak.dy = 0;
         }
 
-        gary.x -= gary.speed; // Consistent speed based on difficulty
+        gary.x -= gary.speed;
 
         if (gary.x + gary.width <= 0) {
             gary.x = canvas.width;
             gary.y = Math.random() * (canvas.height - 50);
-            garyCrossed = false; // Reset crossing flag
+            garyCrossed = false;
         }
 
-        if (
-            !garyCrossed && // Only count once per crossing
+        if (!garyCrossed &&
             angrySqueak.x + angrySqueak.radius > gary.x &&
             angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
             angrySqueak.y + angrySqueak.radius < gary.y
         ) {
             successfulCycles++;
-            garyCrossed = true; // Mark this crossing as counted
+            garyCrossed = true;
 
             if (successfulCycles === 10) {
                 levelUp();
@@ -356,20 +387,18 @@
         successfulCycles = 0; // Reset for the next level
     }
 
-    continueLevelButton.addEventListener('click', () => {
-        gary.speed = difficultySpeeds[currentDifficulty]; // Resume Gary's speed based on current difficulty
-        levelUpScreen.style.display = 'none';
-        currentLevel++;
-        if (currentLevel > 4) {
-            showCelebrationScreen();
-        } else {
-            if (!isMuted) backgroundMusic.play();
-            requestAnimationFrame(update);
-        }
-    });
-
     function showCelebrationScreen() {
         celebrationScreen.style.display = 'block';
+        celebrationScreen.innerHTML = `
+            <h2>Congratulations!</h2>
+            <p>You finished all levels!</p>
+            <ul>
+                <li>Level 1: "You are not a Huckster!"</li>
+                <li>Level 2: "You are not a Fraudster!"</li>
+                <li>Level 3: "You are not a Scam Artist!"</li>
+                <li>Level 4: "You are not a Ponzi Scheme!"</li>
+            </ul>
+        `;
     }
 
     function resetGame() {
