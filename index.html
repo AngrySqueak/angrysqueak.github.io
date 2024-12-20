@@ -13,8 +13,9 @@
 
         canvas {
             display: block;
-            width: 100%;
-            height: calc(100vh - 60px);
+            max-width: 100%;
+            max-height: 100vh;
+            margin: 0 auto;
         }
 
         #game-container {
@@ -281,11 +282,33 @@
         );
     }
 
+    function resizeCanvas() {
+        const isPortrait = window.innerHeight > window.innerWidth;
+
+        if (isPortrait) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            angrySqueak.scale = 1.2; // Adjust scaling for portrait mode
+            gary.scale = 1.2;
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            angrySqueak.scale = 1.5; // Default scaling for landscape mode
+            gary.scale = 1.5;
+        }
+
+        drawAngrySqueak();
+        drawGary();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
     function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (!gameStarted) {
-            drawAngrySqueak(); // Continuously ensure AngrySqueak is visible
+            drawAngrySqueak();
             return;
         }
 
@@ -346,9 +369,7 @@
     }
 
     continueLevelButton.addEventListener('click', () => {
-        // Reset Gary's speed to match the current difficulty
         gary.speed = difficultySpeeds[currentDifficulty];
-        
         levelUpScreen.style.display = 'none';
         currentLevel++;
         if (currentLevel > 4) {
