@@ -66,21 +66,16 @@
             background-position: center;
         }
 
-        .button-container {
+        .game-button {
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 10;
-            display: flex;
-            gap: 10px;
-        }
-
-        .button-container button {
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #000;
+            background-color: #ff5722;
+            color: white;
             padding: 10px;
             border: none;
-            border-radius: 50%;
+            border-radius: 5px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -91,13 +86,21 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .button-container button:hover {
+        .game-button i {
+            font-size: 24px;
+        }
+
+        .game-button:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .button-container button i {
-            font-size: 20px;
+        #difficulty-button {
+            right: 70px;
+        }
+
+        #start-button {
+            right: 130px;
         }
 
         #game-over, #level-up {
@@ -153,14 +156,23 @@
                 height: 30px;
             }
 
-            .button-container {
+            .game-button {
                 top: 5px;
                 right: 5px;
-            }
-
-            .button-container button {
                 width: 40px;
                 height: 40px;
+            }
+
+            .game-button i {
+                font-size: 20px;
+            }
+
+            #difficulty-button {
+                right: 55px;
+            }
+
+            #start-button {
+                right: 105px;
             }
         }
 
@@ -179,14 +191,23 @@
                 height: 25px;
             }
 
-            .button-container {
+            .game-button {
                 top: 3px;
                 right: 3px;
-            }
-
-            .button-container button {
                 width: 35px;
                 height: 35px;
+            }
+
+            .game-button i {
+                font-size: 18px;
+            }
+
+            #difficulty-button {
+                right: 45px;
+            }
+
+            #start-button {
+                right: 85px;
             }
         }
     </style>
@@ -208,11 +229,9 @@
         </a>
     </div>
 
-    <div class="button-container">
-        <button id="mute-button"><i class="fas fa-volume-mute"></i></button>
-        <button id="difficulty-button"><i class="fas fa-tachometer-alt"></i></button>
-        <button id="start-button"><i class="fas fa-play"></i></button>
-    </div>
+    <button id="mute-button" class="game-button"><i class="fas fa-volume-mute"></i></button>
+    <button id="difficulty-button" class="game-button"><i class="fas fa-tachometer-alt"></i></button>
+    <button id="start-button" class="game-button"><i class="fas fa-play"></i></button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -325,6 +344,16 @@
         }
     });
 
+    startButton.addEventListener('click', () => {
+        if (!gameStarted) {
+            gary.speed = difficultySpeeds[currentDifficulty];
+            gameStarted = true;
+            startButton.style.display = 'none';
+            if (!isMuted) backgroundMusic.play();
+            requestAnimationFrame(update);
+        }
+    });
+
     function initializeLevel(levelNumber) {
         levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
         gary.speed = 0;
@@ -341,16 +370,6 @@
             showCelebrationScreen();
         }
     }
-
-    startButton.addEventListener('click', () => {
-        if (!gameStarted) {
-            gary.speed = difficultySpeeds[currentDifficulty];
-            gameStarted = true;
-            // startButton.style.display = 'none';
-            if (!isMuted) backgroundMusic.play();
-            requestAnimationFrame(update);
-        }
-    });
 
     continueLevelButton.addEventListener('click', () => {
         currentLevel++;
@@ -501,10 +520,4 @@
         successfulCycles = 0;
         currentLevel = 1;
         gameStarted = false;
-        gameOverScreen.style.display = 'none';
-        levelUpScreen.style.display = 'none';
-        celebrationScreen.style.display = 'none';
-        angrySqueak.y = canvas.height / 2;
-        angrySqueak.dy = 0;
-        gary.x = canvas.width;
-        gary.speed = difficultySpeeds[currentDifficulty];
+        gameOverScreen.style.display = 'none
