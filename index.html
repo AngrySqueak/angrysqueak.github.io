@@ -299,6 +299,7 @@
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
             if (!isMuted) backgroundMusic.play();
+            console.log('Game started!'); // Debug log
             requestAnimationFrame(update);
         }
     });
@@ -431,6 +432,3 @@
         gary.speed = 0;
         gary.x = canvas.width + gary.width;
         successfulCycles = 0;
-    }
-
-    function showCelebrationScreen() {
