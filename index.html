@@ -123,6 +123,65 @@
             text-align: center;
             border-radius: 10px;
         }
+
+        /* Media queries for responsive design */
+        @media (max-width: 768px) {
+            #game-container {
+                height: 80vh;
+            }
+
+            .social-icons {
+                top: 5px;
+                left: 5px;
+            }
+
+            .social-icons a {
+                width: 30px;
+                height: 30px;
+            }
+
+            #mute-button, #difficulty-button, #start-button {
+                top: 5px;
+                right: 5px;
+            }
+
+            #difficulty-button {
+                right: 80px;
+            }
+
+            #start-button {
+                right: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #game-container {
+                height: 70vh;
+            }
+
+            .social-icons {
+                top: 3px;
+                left: 3px;
+            }
+
+            .social-icons a {
+                width: 25px;
+                height: 25px;
+            }
+
+            #mute-button, #difficulty-button, #start-button {
+                top: 3px;
+                right: 3px;
+            }
+
+            #difficulty-button {
+                right: 60px;
+            }
+
+            #start-button {
+                right: 110px;
+            }
+        }
     </style>
 </head>
 <body>
