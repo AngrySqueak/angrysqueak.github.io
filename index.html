@@ -296,6 +296,8 @@
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
+            gary.x = canvas.width; // Reset Gary's position
+            gary.y = Math.random() * (canvas.height - 50);
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
             if (!isMuted) backgroundMusic.play();
@@ -429,6 +431,3 @@
         backgroundMusic.pause();
         levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
         levelUpScreen.style.display = 'block';
-        gary.speed = 0;
-        gary.x = canvas.width + gary.width;
-        successfulCycles = 0;
