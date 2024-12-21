@@ -137,7 +137,7 @@
         <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
             <i class="fab fa-instagram"></i>
         </a>
-        <a href="https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/angrysqueak_whitepaper.html" target="_blank">
+        <a href="https://angrysqueak.com/AngrySqueakGame-V2/angrysqueak_whitepaper.html" target="_blank">
             <i class="fas fa-file-alt"></i>
         </a>
     </div>
@@ -278,7 +278,6 @@
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-            // startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
         }
@@ -443,5 +442,4 @@
         if (!isMuted) backgroundMusic.play();
     }
 
-    playAgainButton.addEventListener('click', resetGame);
-</script>
+    playAgainButton.add
