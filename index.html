@@ -1,3 +1,5 @@
+Successful version 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -276,21 +278,22 @@
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
-            // Initialize game variables
-            gary.x = canvas.width; // Reset Gary's position
-            gary.y = Math.random() * (canvas.height - 50);
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-            isGameOver = false; // Ensure the game is not marked as over
-            garyCrossed = false; // Reset cycle state
+            // startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
-
-            // Debug log to confirm button click and game start
-            console.log('Game started!');
-
-            // Start the game loop
             requestAnimationFrame(update);
         }
+    });
+
+    continueLevelButton.addEventListener('click', () => {
+        currentLevel++;
+        initializeLevel(currentLevel);
+        levelUpScreen.style.display = 'none';
+        gary.speed = difficultySpeeds[currentDifficulty];
+
+        if (!isMuted) backgroundMusic.play();
+        requestAnimationFrame(update);
     });
 
     document.addEventListener('keydown', (event) => {
@@ -342,10 +345,6 @@
             angrySqueak.scale = 1.5;
             gary.scale = 1.5;
         }
-
-        // Ensure AngrySqueak is always visible during resize
-        angrySqueak.x = canvas.width / 5;
-        angrySqueak.y = canvas.height / 2;
 
         drawAngrySqueak();
         drawGary();
@@ -439,4 +438,12 @@
         gameOverScreen.style.display = 'none';
         levelUpScreen.style.display = 'none';
         celebrationScreen.style.display = 'none';
-        angrySqueak
+        angrySqueak.y = canvas.height / 2;
+        angrySqueak.dy = 0;
+        gary.x = canvas.width;
+        gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
