@@ -1,7 +1,9 @@
+Successful version 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link url="stylesheet" https://angrysqueak.com/AngrySqueakGame-V2/angrysqueak_whitepaper.html">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AngrySqueak Game</title>
@@ -137,7 +139,7 @@
         <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
             <i class="fab fa-instagram"></i>
         </a>
-        <a href="https://angrysqueak.com/AngrySqueakGame-V2/angrysqueak_whitepaper.html" target="_blank">
+        <a href="https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/angrysqueak_whitepaper.html" target="_blank">
             <i class="fas fa-file-alt"></i>
         </a>
     </div>
@@ -236,14 +238,12 @@
     let garyCrossed = false;
 
     muteButton.addEventListener('click', () => {
-        console.log('Mute Button Clicked!'); // Debugging log
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
         muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
-        console.log('Difficulty Button Clicked!'); // Debugging log
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
             difficultyButton.textContent = 'Medium';
@@ -256,7 +256,6 @@
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
-        console.log(`Gary Speed Set: ${gary.speed}`); // Debugging log
         }
     });
 
@@ -278,16 +277,12 @@
     }
 
     startButton.addEventListener('click', () => {
-        console.log('Start Button Clicked!'); // Debugging log
-        console.log('Start Button Clicked!'); // Debugging log
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-        console.log('Game Started:', gameStarted); // Debugging log
-            startButton.style.display = 'none';
+            // startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
-        console.log('Game Loop Initialized'); // Debugging log
         }
     });
 
@@ -448,3 +443,7 @@
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
         if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
