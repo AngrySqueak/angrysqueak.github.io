@@ -38,11 +38,25 @@
 
         .social-icons a {
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .social-icons img {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
         }
 
         #mute-button, #difficulty-button, #start-button {
@@ -109,16 +123,16 @@
 <div id="game-container">
     <div class="social-icons">
         <a href="https://x.com/AngrySqueak" target="_blank">
-            <img src="https://path/to/twitter-icon.png" alt="Twitter Icon">
+            <img src="https://example.com/twitter-icon.svg" alt="Twitter">
         </a>
         <a href="https://linktr.ee/angrysqueak" target="_blank">
-            <img src="https://path/to/angrysqueak-token-icon.gif" alt="AngrySqueak Token">
+            <img src="https://example.com/token-icon.svg" alt="Token">
         </a>
         <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
-            <img src="https://path/to/instagram-icon.png" alt="Instagram Icon">
+            <img src="https://example.com/instagram-icon.svg" alt="Instagram">
         </a>
         <a href="https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/angrysqueak_whitepaper.html" target="_blank">
-            <img src="https://path/to/whitepaper-icon.png" alt="White Paper">
+            <img src="https://example.com/whitepaper-icon.svg" alt="White Paper">
         </a>
     </div>
 
