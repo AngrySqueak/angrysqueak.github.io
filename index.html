@@ -438,13 +438,4 @@
     function resetGame() {
         isGameOver = false;
         successfulCycles = 0;
-        currentLevel = 1;
-        gameStarted = false;
-        gameOverScreen.style.display = 'none';
-        levelUpScreen.style.display = 'none';
-        celebrationScreen.style.display = 'none';
-        angrySqueak.y = canvas.height / 2;
-        angrySqueak.dy = 0;
-        gary.x = canvas.width;
-        gary.speed = difficultySpeeds[currentDifficulty];
-        if (!isMuted) backgroundMusic.play();
+       
