@@ -123,6 +123,34 @@
             text-align: center;
             border-radius: 10px;
         }
+            @media (max-width: 768px) {
+            #mute-button, #difficulty-button, #start-button {
+                position: absolute;
+                top: unset;
+                bottom: 20px;
+                right: 10px;
+                z-index: 10;
+                background-color: #ff5722;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 0 5px;
+            }
+
+            #difficulty-button {
+                bottom: 70px;
+            }
+
+            #start-button {
+                bottom: 120px;
+            }
+
+            .social-icons {
+                top: 60px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -330,6 +358,26 @@
     }
 
     function resizeCanvas() {
+        const isPortrait = window.innerHeight > window.innerWidth;
+
+        if (isPortrait) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            angrySqueak.scale = 1.2;
+            gary.scale = 1.2;
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            angrySqueak.scale = 1.5;
+            gary.scale = 1.5;
+        }
+
+        // Ensure AngrySqueak is always visible during resize
+        angrySqueak.x = canvas.width / 5;
+        angrySqueak.y = canvas.height / 2;
+
+        drawAngrySqueak();
+        drawGary();
         const isPortrait = window.innerHeight > window.innerWidth;
 
         if (isPortrait) {
