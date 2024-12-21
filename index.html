@@ -278,6 +278,7 @@
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
+            startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
         }
@@ -440,6 +441,3 @@
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
         if (!isMuted) backgroundMusic.play();
-    }
-
-    playAgainButton.add
