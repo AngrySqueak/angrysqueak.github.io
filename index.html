@@ -68,22 +68,36 @@
         #mute-button, #difficulty-button, #start-button {
             position: absolute;
             top: 10px;
-            right: 10px;
             z-index: 10;
-            background-color: #ff5722;
-            color: white;
-            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border: none;
-            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #mute-button:hover, #difficulty-button:hover, #start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #mute-button i, #difficulty-button i, #start-button i {
+            font-size: 20px;
+            color: #000;
         }
 
         #difficulty-button {
-            right: 100px;
+            right: 60px;
         }
 
         #start-button {
-            right: 200px;
+            right: 120px;
         }
 
         #game-over, #level-up {
@@ -142,9 +156,9 @@
         </a>
     </div>
 
-    <button id="mute-button">Mute</button>
-    <button id="difficulty-button">Easy</button>
-    <button id="start-button">Start</button>
+    <button id="mute-button"><i class="fas fa-volume-mute"></i></button>
+    <button id="difficulty-button"><i class="fas fa-gamepad"></i></button>
+    <button id="start-button"><i class="fas fa-play"></i></button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -238,19 +252,19 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-off"></i>' : '<i class="fas fa-volume-mute"></i>';
     });
 
     difficultyButton.addEventListener('click', () => {
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
-            difficultyButton.textContent = 'Medium';
+            difficultyButton.innerHTML = '<i class="fas fa-dice"></i>';
         } else if (currentDifficulty === 'medium') {
             currentDifficulty = 'hard';
-            difficultyButton.textContent = 'Hard';
+            difficultyButton.innerHTML = '<i class="fas fa-gamepad"></i>';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.textContent = 'Easy';
+            difficultyButton.innerHTML = '<i class="fas fa-trophy"></i>';
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
@@ -278,7 +292,6 @@
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-            startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
         }
@@ -420,24 +433,3 @@
             <h2>Congratulations!</h2>
             <p>You finished all levels!</p>
             <ul>
-                <li>Level 1: "You are not a Huckster!"</li>
-                <li>Level 2: "You are not a Fraudster!"</li>
-                <li>Level 3: "You are not a Scam Artist!"</li>
-                <li>Level 4: "You are not a Ponzi Scheme!"</li>
-            </ul>
-        `;
-    }
-
-    function resetGame() {
-        isGameOver = false;
-        successfulCycles = 0;
-        currentLevel = 1;
-        gameStarted = false;
-        gameOverScreen.style.display = 'none';
-        levelUpScreen.style.display = 'none';
-        celebrationScreen.style.display = 'none';
-        angrySqueak.y = canvas.height / 2;
-        angrySqueak.dy = 0;
-        gary.x = canvas.width;
-        gary.speed = difficultySpeeds[currentDifficulty];
-       
