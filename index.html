@@ -440,3 +440,8 @@
         angrySqueak.dy = 0;
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
