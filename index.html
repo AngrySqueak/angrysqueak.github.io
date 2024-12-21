@@ -59,6 +59,12 @@
             color: #000;
         }
 
+        .social-icons a.angry-squeak {
+            background-image: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif');
+            background-size: cover;
+            background-position: center;
+        }
+
         #mute-button, #difficulty-button, #start-button {
             position: absolute;
             top: 10px;
@@ -126,8 +132,7 @@
         <a href="https://x.com/AngrySqueak" target="_blank">
             <i class="fab fa-twitter"></i>
         </a>
-        <a href="https://linktr.ee/angrysqueak" target="_blank">
-            <i class="fab fa-bitcoin"></i>
+        <a href="https://linktr.ee/angrysqueak" target="_blank" class="angry-squeak">
         </a>
         <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
             <i class="fab fa-instagram"></i>
@@ -435,11 +440,4 @@
         angrySqueak.dy = 0;
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
-        if (!isMuted) backgroundMusic.play();
-    }
-
-    playAgainButton.addEventListener('click', resetGame);
-
-</script>
-</body>
-</html>
+       
