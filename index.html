@@ -66,25 +66,38 @@
             background-position: center;
         }
 
-        #mute-button, #difficulty-button, #start-button {
+        .button-container {
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 10;
-            background-color: #ff5722;
-            color: white;
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container button {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
             padding: 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #difficulty-button {
-            right: 100px;
+        .button-container button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        #start-button {
-            right: 200px;
+        .button-container button i {
+            font-size: 20px;
         }
 
         #game-over, #level-up {
@@ -140,17 +153,14 @@
                 height: 30px;
             }
 
-            #mute-button, #difficulty-button, #start-button {
+            .button-container {
                 top: 5px;
                 right: 5px;
             }
 
-            #difficulty-button {
-                right: 80px;
-            }
-
-            #start-button {
-                right: 150px;
+            .button-container button {
+                width: 40px;
+                height: 40px;
             }
         }
 
@@ -169,17 +179,14 @@
                 height: 25px;
             }
 
-            #mute-button, #difficulty-button, #start-button {
+            .button-container {
                 top: 3px;
                 right: 3px;
             }
 
-            #difficulty-button {
-                right: 60px;
-            }
-
-            #start-button {
-                right: 110px;
+            .button-container button {
+                width: 35px;
+                height: 35px;
             }
         }
     </style>
@@ -201,9 +208,11 @@
         </a>
     </div>
 
-    <button id="mute-button">Mute</button>
-    <button id="difficulty-button">Easy</button>
-    <button id="start-button">Start</button>
+    <div class="button-container">
+        <button id="mute-button"><i class="fas fa-volume-mute"></i></button>
+        <button id="difficulty-button"><i class="fas fa-tachometer-alt"></i></button>
+        <button id="start-button"><i class="fas fa-play"></i></button>
+    </div>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -297,19 +306,19 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
     });
 
     difficultyButton.addEventListener('click', () => {
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
-            difficultyButton.textContent = 'Medium';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Medium';
         } else if (currentDifficulty === 'medium') {
             currentDifficulty = 'hard';
-            difficultyButton.textContent = 'Hard';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Hard';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.textContent = 'Easy';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Easy';
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
@@ -499,8 +508,3 @@
         angrySqueak.dy = 0;
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
-        if (!isMuted) backgroundMusic.play();
-    }
-
-    playAgainButton.addEventListener('click', resetGame);
-</script>
