@@ -66,7 +66,7 @@
             background-position: center;
         }
 
-        .game-button {
+        #mute-button, #difficulty-button, #start-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -77,30 +77,14 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .game-button i {
-            font-size: 24px;
-        }
-
-        .game-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         #difficulty-button {
-            right: 70px;
+            right: 100px;
         }
 
         #start-button {
-            right: 130px;
+            right: 200px;
         }
 
         #game-over, #level-up {
@@ -156,23 +140,17 @@
                 height: 30px;
             }
 
-            .game-button {
+            #mute-button, #difficulty-button, #start-button {
                 top: 5px;
                 right: 5px;
-                width: 40px;
-                height: 40px;
-            }
-
-            .game-button i {
-                font-size: 20px;
             }
 
             #difficulty-button {
-                right: 55px;
+                right: 80px;
             }
 
             #start-button {
-                right: 105px;
+                right: 150px;
             }
         }
 
@@ -191,23 +169,17 @@
                 height: 25px;
             }
 
-            .game-button {
+            #mute-button, #difficulty-button, #start-button {
                 top: 3px;
                 right: 3px;
-                width: 35px;
-                height: 35px;
-            }
-
-            .game-button i {
-                font-size: 18px;
             }
 
             #difficulty-button {
-                right: 45px;
+                right: 60px;
             }
 
             #start-button {
-                right: 85px;
+                right: 110px;
             }
         }
     </style>
@@ -229,9 +201,9 @@
         </a>
     </div>
 
-    <button id="mute-button" class="game-button"><i class="fas fa-volume-mute"></i></button>
-    <button id="difficulty-button" class="game-button"><i class="fas fa-tachometer-alt"></i></button>
-    <button id="start-button" class="game-button"><i class="fas fa-play"></i></button>
+    <button id="mute-button">Mute</button>
+    <button id="difficulty-button">Easy</button>
+    <button id="start-button">Start</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -325,32 +297,22 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Medium';
+            difficultyButton.textContent = 'Medium';
         } else if (currentDifficulty === 'medium') {
             currentDifficulty = 'hard';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Hard';
+            difficultyButton.textContent = 'Hard';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Easy';
+            difficultyButton.textContent = 'Easy';
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
-        }
-    });
-
-    startButton.addEventListener('click', () => {
-        if (!gameStarted) {
-            gary.speed = difficultySpeeds[currentDifficulty];
-            gameStarted = true;
-            startButton.style.display = 'none';
-            if (!isMuted) backgroundMusic.play();
-            requestAnimationFrame(update);
         }
     });
 
@@ -370,6 +332,16 @@
             showCelebrationScreen();
         }
     }
+
+    startButton.addEventListener('click', () => {
+        if (!gameStarted) {
+            gary.speed = difficultySpeeds[currentDifficulty];
+            gameStarted = true;
+            startButton.style.display = 'none';
+            if (!isMuted) backgroundMusic.play();
+            requestAnimationFrame(update);
+        }
+    });
 
     continueLevelButton.addEventListener('click', () => {
         currentLevel++;
@@ -520,4 +492,15 @@
         successfulCycles = 0;
         currentLevel = 1;
         gameStarted = false;
-        gameOverScreen.style.display = 'none
+        gameOverScreen.style.display = 'none';
+        levelUpScreen.style.display = 'none';
+        celebrationScreen.style.display = 'none';
+        angrySqueak.y = canvas.height / 2;
+        angrySqueak.dy = 0;
+        gary.x = canvas.width;
+        gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
