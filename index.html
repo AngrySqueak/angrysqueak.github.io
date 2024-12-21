@@ -300,8 +300,9 @@
             gary.y = Math.random() * (canvas.height - 50);
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
+            isGameOver = false; // Ensure the game is not marked as over
+            garyCrossed = false; // Reset cycle state
             if (!isMuted) backgroundMusic.play();
-            console.log('Game started!'); // Debug log
             requestAnimationFrame(update);
         }
     });
@@ -376,8 +377,7 @@
     function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (!gameStarted) {
-            drawAngrySqueak();
+        if (isGameOver) {
             return;
         }
 
@@ -430,4 +430,4 @@
     function levelUp() {
         backgroundMusic.pause();
         levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
-        levelUpScreen.style.display = 'block';
+        level
