@@ -236,12 +236,14 @@
     let garyCrossed = false;
 
     muteButton.addEventListener('click', () => {
+        console.log('Mute Button Clicked!'); // Debugging log
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
         muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
+        console.log('Difficulty Button Clicked!'); // Debugging log
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
             difficultyButton.textContent = 'Medium';
@@ -254,6 +256,7 @@
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
+        console.log(`Gary Speed Set: ${gary.speed}`); // Debugging log
         }
     });
 
@@ -275,12 +278,16 @@
     }
 
     startButton.addEventListener('click', () => {
+        console.log('Start Button Clicked!'); // Debugging log
+        console.log('Start Button Clicked!'); // Debugging log
         if (!gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
+        console.log('Game Started:', gameStarted); // Debugging log
             startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
+        console.log('Game Loop Initialized'); // Debugging log
         }
     });
 
