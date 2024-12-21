@@ -70,42 +70,20 @@
             top: 10px;
             right: 10px;
             z-index: 10;
-            background-color: rgba(255, 255, 255, 0.8);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background-color: #ff5722;
+            color: white;
+            padding: 10px;
             border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        #mute-button {
-            top: 10px;
-            right: 10px;
         }
 
         #difficulty-button {
-            top: 60px;
-            right: 10px;
+            right: 100px;
         }
 
         #start-button {
-            top: 110px;
-            right: 10px;
-        }
-
-        #mute-button:hover, #difficulty-button:hover, #start-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        #mute-button i, #difficulty-button i, #start-button i {
-            font-size: 20px;
-            color: #000;
+            right: 200px;
         }
 
         #game-over, #level-up {
@@ -145,7 +123,6 @@
             border-radius: 10px;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
@@ -164,9 +141,9 @@
         </a>
     </div>
 
-    <button id="mute-button"><i class="fas fa-volume-mute"></i></button>
-    <button id="difficulty-button"><i class="fas fa-gamepad"></i></button>
-    <button id="start-button"><i class="fas fa-play"></i></button>
+    <button id="mute-button">Mute</button>
+    <button id="difficulty-button">Easy</button>
+    <button id="start-button">Start</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -246,7 +223,7 @@
         y: Math.random() * (canvas.height - 50),
         width: 50,
         height: 50,
-        speed: difficultySpeeds[currentDifficulty],
+        speed: 0,
         image: new Image(),
         scale: 1.5
     };
@@ -260,26 +237,28 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-off"></i>' : '<i class="fas fa-volume-mute"></i>';
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
-            difficultyButton.innerHTML = '<i class="fas fa-dice"></i>';
+            difficultyButton.textContent = 'Medium';
         } else if (currentDifficulty === 'medium') {
             currentDifficulty = 'hard';
-            difficultyButton.innerHTML = '<i class="fas fa-gamepad"></i>';
+            difficultyButton.textContent = 'Hard';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.innerHTML = '<i class="fas fa-trophy"></i>';
+            difficultyButton.textContent = 'Easy';
         }
-        gary.speed = difficultySpeeds[currentDifficulty];
+        if (gameStarted) {
+            gary.speed = difficultySpeeds[currentDifficulty];
+        }
     });
 
     function initializeLevel(levelNumber) {
         levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
-        gary.speed = difficultySpeeds[currentDifficulty];
+        gary.speed = 0;
         gary.x = canvas.width + gary.width;
         successfulCycles = 0;
 
@@ -296,12 +275,9 @@
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
-            gary.x = canvas.width; // Reset Gary's position
-            gary.y = Math.random() * (canvas.height - 50);
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-            isGameOver = false; // Ensure the game is not marked as over
-            garyCrossed = false; // Reset cycle state
+            startButton.style.display = 'none';
             if (!isMuted) backgroundMusic.play();
             requestAnimationFrame(update);
         }
@@ -377,7 +353,8 @@
     function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (isGameOver) {
+        if (!gameStarted) {
+            drawAngrySqueak();
             return;
         }
 
@@ -430,4 +407,40 @@
     function levelUp() {
         backgroundMusic.pause();
         levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
-        level
+        levelUpScreen.style.display = 'block';
+        gary.speed = 0;
+        gary.x = canvas.width + gary.width;
+        successfulCycles = 0;
+    }
+
+    function showCelebrationScreen() {
+        celebrationScreen.style.display = 'block';
+        celebrationScreen.innerHTML = `
+            <h2>Congratulations!</h2>
+            <p>You finished all levels!</p>
+            <ul>
+                <li>Level 1: "You are not a Huckster!"</li>
+                <li>Level 2: "You are not a Fraudster!"</li>
+                <li>Level 3: "You are not a Scam Artist!"</li>
+                <li>Level 4: "You are not a Ponzi Scheme!"</li>
+            </ul>
+        `;
+    }
+
+    function resetGame() {
+        isGameOver = false;
+        successfulCycles = 0;
+        currentLevel = 1;
+        gameStarted = false;
+        gameOverScreen.style.display = 'none';
+        levelUpScreen.style.display = 'none';
+        celebrationScreen.style.display = 'none';
+        angrySqueak.y = canvas.height / 2;
+        angrySqueak.dy = 0;
+        gary.x = canvas.width;
+        gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
