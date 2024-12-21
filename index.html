@@ -77,6 +77,10 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
         #difficulty-button {
@@ -143,6 +147,8 @@
             #mute-button, #difficulty-button, #start-button {
                 top: 5px;
                 right: 5px;
+                padding: 5px;
+                font-size: 14px;
             }
 
             #difficulty-button {
@@ -172,6 +178,8 @@
             #mute-button, #difficulty-button, #start-button {
                 top: 3px;
                 right: 3px;
+                padding: 3px;
+                font-size: 12px;
             }
 
             #difficulty-button {
@@ -201,20 +209,20 @@
         </a>
     </div>
 
-    <button id="mute-button">Mute</button>
-    <button id="difficulty-button">Easy</button>
-    <button id="start-button">Start</button>
+    <button id="mute-button"><i class="fas fa-volume-mute"></i> Mute</button>
+    <button id="difficulty-button"><i class="fas fa-tachometer-alt"></i> Easy</button>
+    <button id="start-button"><i class="fas fa-play"></i> Start</button>
 
     <canvas id="gameCanvas"></canvas>
 
     <div id="game-over">
         <h2>Game Over</h2>
-        <button id="play-again">Play Again</button>
+        <button id="play-again"><i class="fas fa-redo"></i> Play Again</button>
     </div>
 
     <div id="level-up">
         <h2 id="level-message"></h2>
-        <button id="continue-level">Continue</button>
+        <button id="continue-level"><i class="fas fa-arrow-right"></i> Continue</button>
     </div>
 
     <div id="celebration-screen">
@@ -297,19 +305,19 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i> Unmute' : '<i class="fas fa-volume-mute"></i> Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
         if (currentDifficulty === 'easy') {
             currentDifficulty = 'medium';
-            difficultyButton.textContent = 'Medium';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Medium';
         } else if (currentDifficulty === 'medium') {
             currentDifficulty = 'hard';
-            difficultyButton.textContent = 'Hard';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Hard';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.textContent = 'Easy';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Easy';
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
@@ -323,7 +331,7 @@
         successfulCycles = 0;
 
         if (levelNumber === 1) {
-            startButton.style.display = 'block';
+            startButton.style.display = 'flex';
         } else {
             levelUpScreen.style.display = 'block';
         }
@@ -352,6 +360,8 @@
         if (!isMuted) backgroundMusic.play();
         requestAnimationFrame(update);
     });
+
+    playAgainButton.addEventListener('click', resetGame);
 
     document.addEventListener('keydown', (event) => {
         if (event.code === 'Space') {
@@ -500,6 +510,7 @@
         gary.x = canvas.width;
         gary.speed = difficultySpeeds[currentDifficulty];
         if (!isMuted) backgroundMusic.play();
+        startButton.style.display = 'flex';
     }
 
     playAgainButton.addEventListener('click', resetGame);
