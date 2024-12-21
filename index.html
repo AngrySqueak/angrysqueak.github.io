@@ -276,22 +276,21 @@
 
     startButton.addEventListener('click', () => {
         if (!gameStarted) {
+            // Initialize game variables
+            gary.x = canvas.width; // Reset Gary's position
+            gary.y = Math.random() * (canvas.height - 50);
             gary.speed = difficultySpeeds[currentDifficulty];
             gameStarted = true;
-            // startButton.style.display = 'none';
+            isGameOver = false; // Ensure the game is not marked as over
+            garyCrossed = false; // Reset cycle state
             if (!isMuted) backgroundMusic.play();
+
+            // Debug log to confirm button click and game start
+            console.log('Game started!');
+
+            // Start the game loop
             requestAnimationFrame(update);
         }
-    });
-
-    continueLevelButton.addEventListener('click', () => {
-        currentLevel++;
-        initializeLevel(currentLevel);
-        levelUpScreen.style.display = 'none';
-        gary.speed = difficultySpeeds[currentDifficulty];
-
-        if (!isMuted) backgroundMusic.play();
-        requestAnimationFrame(update);
     });
 
     document.addEventListener('keydown', (event) => {
