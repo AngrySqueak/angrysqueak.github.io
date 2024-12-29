@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,37 +129,6 @@
             border-radius: 10px;
         }
 
-        #start-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        #start-message img {
-            margin: 10px;
-        }
-
-        #start-game-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ff5722;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
         /* Media queries for responsive design */
         @media (max-width: 768px) {
             #game-container {
@@ -225,21 +195,6 @@
 </head>
 <body>
 
-<div id="start-message">
-    <h1>Welcome to AngrySqueak Game!</h1>
-    <div>
-        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif" alt="Angry Squeak" style="width: 100px; height: 100px;">
-        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif" alt="Gary" style="width: 100px; height: 100px;">
-    </div>
-    <p>Your character, Angry Squeak, is trying to avoid Gary and achieve higher levels in the game. By jumping and avoiding Gary, you can progress through the levels. You can also change the difficulty of the game and mute or unmute the background music.</p>
-    <p>Controls:</p>
-    <ul>
-        <li>Press the <strong>Space</strong> key or tap the screen to make Angry Squeak jump.</li>
-        <li>Use the buttons at the top-right to mute/unmute music and change the difficulty level.</li>
-    </ul>
-    <button id="start-game-button">Start the Game</button>
-</div>
-
 <div id="game-container">
     <div class="social-icons">
         <a href="https://x.com/AngrySqueak" target="_blank">
@@ -284,29 +239,6 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const startMessage = document.getElementById('start-message');
-        const startGameButton = document.getElementById('start-game-button');
-        const gameContainer = document.getElementById('game-container');
-        
-        startGameButton.addEventListener('click', () => {
-            startMessage.style.display = 'none';
-            gameContainer.style.display = 'block';
-            initializeGame();
-        });
-        
-        function initializeGame() {
-            gary.speed = difficultySpeeds[currentDifficulty];
-            gameStarted = true;
-            startButton.style.display = 'none';
-            if (!isMuted) backgroundMusic.play();
-            requestAnimationFrame(update);
-        }
-
-        // Hide game container initially
-        gameContainer.style.display = 'none';
-    });
-
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const gameContainer = document.getElementById('game-container');
@@ -501,4 +433,86 @@
         angrySqueak.dy += angrySqueak.gravity;
 
         if (angrySqueak.y + angrySqueak.radius > canvas.height) {
-            angry
+            angrySqueak.y = canvas.height - angrySqueak.radius;
+            angrySqueak.dy = 0;
+        }
+
+        gary.x -= gary.speed;
+
+        if (gary.x + gary.width <= 0) {
+            gary.x = canvas.width;
+            gary.y = Math.random() * (canvas.height - 50);
+            garyCrossed = false;
+        }
+
+        if (!garyCrossed &&
+            angrySqueak.x + angrySqueak.radius > gary.x &&
+            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
+            angrySqueak.y + angrySqueak.radius < gary.y
+        ) {
+            successfulCycles++;
+            garyCrossed = true;
+
+            if (successfulCycles === 10) {
+                levelUp();
+            }
+        }
+
+        if (
+            angrySqueak.x + angrySqueak.radius > gary.x &&
+            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
+            angrySqueak.y + angrySqueak.radius > gary.y &&
+            angrySqueak.y - angrySqueak.radius < gary.y + gary.height
+        ) {
+            isGameOver = true;
+            gameOverScreen.style.display = 'block';
+            backgroundMusic.pause();
+        }
+
+        drawAngrySqueak();
+        drawGary();
+
+        requestAnimationFrame(update);
+    }
+
+    function levelUp() {
+        backgroundMusic.pause();
+        levelMessage.textContent = `Level ${currentLevel}: ${levelMessages[currentLevel - 1]} Congratulations!`;
+        levelUpScreen.style.display = 'block';
+        gary.speed = 0;
+        gary.x = canvas.width + gary.width;
+        successfulCycles = 0;
+    }
+
+    function showCelebrationScreen() {
+        celebrationScreen.style.display = 'block';
+        celebrationScreen.innerHTML = `
+            <h2>Congratulations!</h2>
+            <p>You finished all levels!</p>
+            <ul>
+                <li>Level 1: "You are not a Huckster!"</li>
+                <li>Level 2: "You are not a Fraudster!"</li>
+                <li>Level 3: "You are not a Scam Artist!"</li>
+                <li>Level 4: "You are not a Ponzi Scheme!"</li>
+            </ul>
+        `;
+    }
+
+    function resetGame() {
+        isGameOver = false;
+        successfulCycles = 0;
+        currentLevel = 1;
+        gameStarted = false;
+        gameOverScreen.style.display = 'none';
+        levelUpScreen.style.display = 'none';
+        celebrationScreen.style.display = 'none';
+        angrySqueak.y = canvas.height / 2;
+        angrySqueak.dy = 0;
+        gary.x = canvas.width;
+        gary.speed = difficultySpeeds[currentDifficulty];
+        if (!isMuted) backgroundMusic.play();
+        startButton.style.display = 'flex';
+    }
+
+    playAgainButton.addEventListener('click', resetGame);
+</script>
