@@ -108,7 +108,7 @@
             background-position: center;
         }
 
-        #mute-button, #difficulty-button, #start-button {
+        #mute-button, #difficulty-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -127,11 +127,6 @@
 
         #difficulty-button {
             right: 100px;
-        }
-
-        #start-button {
-            right: 200px;
-            display: none;
         }
 
         #game-over, #level-up {
@@ -187,7 +182,7 @@
                 height: 30px;
             }
 
-            #mute-button, #difficulty-button, #start-button {
+            #mute-button, #difficulty-button {
                 top: 5px;
                 right: 5px;
                 padding: 5px;
@@ -196,10 +191,6 @@
 
             #difficulty-button {
                 right: 80px;
-            }
-
-            #start-button {
-                right: 150px;
             }
         }
 
@@ -218,7 +209,7 @@
                 height: 25px;
             }
 
-            #mute-button, #difficulty-button, #start-button {
+            #mute-button, #difficulty-button {
                 top: 3px;
                 right: 3px;
                 padding: 3px;
@@ -227,10 +218,6 @@
 
             #difficulty-button {
                 right: 60px;
-            }
-
-            #start-button {
-                right: 110px;
             }
         }
     </style>
@@ -373,15 +360,9 @@
 
     function initializeLevel(levelNumber) {
         levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
-        gary.speed = 0;
+        gary.speed = difficultySpeeds[currentDifficulty];
         gary.x = canvas.width + gary.width;
         successfulCycles = 0;
-
-        if (levelNumber === 1) {
-            introModal.style.display = 'block';
-        } else {
-            levelUpScreen.style.display = 'block';
-        }
 
         if (levelNumber > 4) {
             showCelebrationScreen();
@@ -390,7 +371,7 @@
 
     startGameButton.addEventListener('click', () => {
         introModal.style.display = 'none';
-        gary.speed = difficultySpeeds[currentDifficulty];
+        initializeLevel(currentLevel);
         gameStarted = true;
         if (!isMuted) backgroundMusic.play();
         requestAnimationFrame(update);
@@ -400,7 +381,6 @@
         currentLevel++;
         initializeLevel(currentLevel);
         levelUpScreen.style.display = 'none';
-        gary.speed = difficultySpeeds[currentDifficulty];
 
         if (!isMuted) backgroundMusic.play();
         requestAnimationFrame(update);
@@ -440,3 +420,25 @@
             gary.y,
             gary.width * gary.scale,
             gary.height * gary.scale
+        );
+    }
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (!gameStarted) {
+            return;
+        }
+
+        angrySqueak.y += angrySqueak.dy;
+        angrySqueak.dy += angrySqueak.gravity;
+
+        if (angry
