@@ -273,156 +273,12 @@
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const gameContainer = document.getElementById('game-container');
     const introModal = document.getElementById('intro-modal');
     const startGameButton = document.getElementById('start-game');
-    const gameOverScreen = document.getElementById('game-over');
-    const playAgainButton = document.getElementById('play-again');
-    const levelUpScreen = document.getElementById('level-up');
-    const levelMessage = document.getElementById('level-message');
-    const continueLevelButton = document.getElementById('continue-level');
-    const celebrationScreen = document.getElementById('celebration-screen');
-    const muteButton = document.getElementById('mute-button');
-    const difficultyButton = document.getElementById('difficulty-button');
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const jumpSound = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/AngrySqueak%202.MP3');
-    const backgroundMusic = new Audio('https://github.com/AngrySqueak/AngrySqueakGame-V2/raw/refs/heads/main/Hucksters,%20fruadsters%20checks%20notes%20scam%20artists.MP3');
-    backgroundMusic.loop = true;
-
-    let isMuted = false;
-    let currentDifficulty = 'easy';
     let gameStarted = false;
-    const difficultySpeeds = {
-        easy: 5,
-        medium: 8,
-        hard: 12,
-    };
 
-    const levelMessages = [
-        "You are not a Huckster!",
-        "You are not a Fraudster!",
-        "You are not a Scam Artist!",
-        "You are not a Ponzi Scheme!"
-    ];
-
-    const angrySqueak = {
-        x: 100,
-        y: canvas.height / 2,
-        radius: 25,
-        dy: 0,
-        gravity: 0.5,
-        jumpStrength: -10,
-        image: new Image(),
-        scale: 1.5
-    };
-    angrySqueak.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif';
-
-    const gary = {
-        x: canvas.width,
-        y: Math.random() * (canvas.height - 50),
-        width: 50,
-        height: 50,
-        speed: 0,
-        image: new Image(),
-        scale: 1.5
-    };
-    gary.image.src = 'https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif';
-
-    let isGameOver = false;
-    let successfulCycles = 0;
-    let currentLevel = 1;
-    let garyCrossed = false;
-
-    muteButton.addEventListener('click', () => {
-        isMuted = !isMuted;
-        backgroundMusic.muted = isMuted;
-        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i> Unmute' : '<i class="fas fa-volume-mute"></i> Mute';
-    });
-
-    difficultyButton.addEventListener('click', () => {
-        if (currentDifficulty === 'easy') {
-            currentDifficulty = 'medium';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Medium';
-        } else if (currentDifficulty === 'medium') {
-            currentDifficulty = 'hard';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Hard';
-        } else {
-            currentDifficulty = 'easy';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Easy';
-        }
-        if (gameStarted) {
-            gary.speed = difficultySpeeds[currentDifficulty];
-        }
-    });
-
-    function initializeLevel(levelNumber) {
-        levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
-        gary.speed = difficultySpeeds[currentDifficulty];
-        gary.x = canvas.width + gary.width;
-        successfulCycles = 0;
-
-        if (levelNumber > 4) {
-            showCelebrationScreen();
-        }
-    }
-
-    startGameButton.addEventListener('click', () => {
-        introModal.style.display = 'none';
-        initializeLevel(currentLevel);
-        gameStarted = true;
-        if (!isMuted) backgroundMusic.play();
-        requestAnimationFrame(update);
-    });
-
-    continueLevelButton.addEventListener('click', () => {
-        currentLevel++;
-        initializeLevel(currentLevel);
-        levelUpScreen.style.display = 'none';
-
-        if (!isMuted) backgroundMusic.play();
-        requestAnimationFrame(update);
-    });
-
-    playAgainButton.addEventListener('click', resetGame);
-
-    document.addEventListener('keydown', (event) => {
-        if (event.code === 'Space') {
-            jumpAction();
-        }
-    });
-
-    canvas.addEventListener('touchstart', () => {
-        jumpAction();
-    });
-
-    function jumpAction() {
-        angrySqueak.dy = angrySqueak.jumpStrength;
-        if (!isMuted) jumpSound.play();
-    }
-
-    function drawAngrySqueak() {
-        ctx.drawImage(
-            angrySqueak.image,
-            angrySqueak.x - angrySqueak.radius * angrySqueak.scale,
-            angrySqueak.y - angrySqueak.radius * angrySqueak.scale,
-            angrySqueak.radius * 2 * angrySqueak.scale,
-            angrySqueak.radius * 2 * angrySqueak.scale
-        );
-    }
-
-    function drawGary() {
-        ctx.drawImage(
-            gary.image,
-            gary.x,
-            gary.y,
-            gary.width * gary.scale,
-            gary.height * gary.scale
-        );
-    }
-
+    // Adjust the canvas size
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -431,14 +287,23 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    function update() {
+    function startGame() {
+        introModal.style.display = 'none';
+        gameStarted = true;
+        // Add game initialization logic here
+        updateGame();
+    }
+
+    function updateGame() {
+        if (!gameStarted) return;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Add game loop logic here
 
-        if (!gameStarted) {
-            return;
-        }
+        requestAnimationFrame(updateGame);
+    }
 
-        angrySqueak.y += angrySqueak.dy;
-        angrySqueak.dy += angrySqueak.gravity;
-
-        if (angry
+    startGameButton.addEventListener('click', startGame);
+</script>
+</body>
+</html>
