@@ -26,7 +26,48 @@
             background-image: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif');
             background-size: cover;
             overflow: hidden;
-            display: none; /* Hide initially */
+        }
+
+        #intro-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 20;
+        }
+
+        #intro-modal h2 {
+            margin-bottom: 10px;
+        }
+
+        #intro-modal p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        #intro-modal img {
+            max-width: 100px;
+            margin: 10px;
+        }
+
+        #intro-modal button {
+            padding: 10px 20px;
+            background-color: #ff5722;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #intro-modal button:hover {
+            background-color: #e64a19;
         }
 
         .social-icons {
@@ -67,7 +108,7 @@
             background-position: center;
         }
 
-        #mute-button, #difficulty-button {
+        #mute-button, #difficulty-button, #start-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -86,6 +127,11 @@
 
         #difficulty-button {
             right: 100px;
+        }
+
+        #start-button {
+            right: 200px;
+            display: none;
         }
 
         #game-over, #level-up {
@@ -125,37 +171,6 @@
             border-radius: 10px;
         }
 
-        #start-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        #start-message img {
-            margin: 10px;
-        }
-
-        #start-game-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ff5722;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
         /* Media queries for responsive design */
         @media (max-width: 768px) {
             #game-container {
@@ -172,7 +187,7 @@
                 height: 30px;
             }
 
-            #mute-button, #difficulty-button {
+            #mute-button, #difficulty-button, #start-button {
                 top: 5px;
                 right: 5px;
                 padding: 5px;
@@ -181,6 +196,10 @@
 
             #difficulty-button {
                 right: 80px;
+            }
+
+            #start-button {
+                right: 150px;
             }
         }
 
@@ -199,7 +218,7 @@
                 height: 25px;
             }
 
-            #mute-button, #difficulty-button {
+            #mute-button, #difficulty-button, #start-button {
                 top: 3px;
                 right: 3px;
                 padding: 3px;
@@ -209,27 +228,23 @@
             #difficulty-button {
                 right: 60px;
             }
+
+            #start-button {
+                right: 110px;
+            }
         }
     </style>
 </head>
 <body>
-
-<div id="start-message">
-    <h1>Welcome to AngrySqueak Game!</h1>
-    <div>
-        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif" alt="Angry Squeak" style="width: 100px;">
-        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif" alt="Gary" style="width: 100px;">
-    </div>
-    <p>Your character, Angry Squeak, is trying to avoid Gary and achieve higher levels in the game. By jumping and avoiding Gary, you can progress through the levels. You can also change the difficulty level using the button at the top-right.</p>
-    <p>Controls:</p>
-    <ul>
-        <li>Press the <strong>Space</strong> key or tap the screen to make Angry Squeak jump.</li>
-        <li>Use the buttons at the top-right to mute/unmute music and change the difficulty level.</li>
-    </ul>
-    <button id="start-game-button">Start the Game</button>
-</div>
-
 <div id="game-container">
+    <div id="intro-modal">
+        <h2>Welcome to AngrySqueak Game!</h2>
+        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif" alt="AngrySqueak">
+        <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/Gary%3A%20the%20moving%20square%20in%20the%20game%20Gif.gif" alt="Gary">
+        <p>Help AngrySqueak avoid Gary to climb levels and score high points! Adjust the difficulty using the top-right buttons. You can also mute/unmute the background music.</p>
+        <button id="start-game">Start Game</button>
+    </div>
+
     <div class="social-icons">
         <a href="https://x.com/AngrySqueak" target="_blank">
             <i class="fab fa-twitter"></i>
@@ -243,9 +258,6 @@
             <i class="fas fa-file-alt"></i>
         </a>
     </div>
-
-    <button id="mute-button"><i class="fas fa-volume-mute"></i> Mute</button>
-    <button id="difficulty-button"><i class="fas fa-tachometer-alt"></i> Easy</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -272,20 +284,11 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const startMessage = document.getElementById('start-message');
-        const startGameButton = document.getElementById('start-game-button');
-        const gameContainer = document.getElementById('game-container');
-
-        startGameButton.addEventListener('click', () => {
-            startMessage.style.display = 'none';
-            gameContainer.style.display = 'block';
-            initializeGame();
-        });
-    });
-
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const gameContainer = document.getElementById('game-container');
+    const introModal = document.getElementById('intro-modal');
+    const startGameButton = document.getElementById('start-game');
     const gameOverScreen = document.getElementById('game-over');
     const playAgainButton = document.getElementById('play-again');
     const levelUpScreen = document.getElementById('level-up');
@@ -361,19 +364,12 @@
             difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Hard';
         } else {
             currentDifficulty = 'easy';
-            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt'></i> Easy';
+            difficultyButton.innerHTML = '<i class="fas fa-tachometer-alt"></i> Easy';
         }
         if (gameStarted) {
             gary.speed = difficultySpeeds[currentDifficulty];
         }
     });
-
-    function initializeGame() {
-        gary.speed = difficultySpeeds[currentDifficulty];
-        gameStarted = true;
-        if (!isMuted) backgroundMusic.play();
-        requestAnimationFrame(update);
-    }
 
     function initializeLevel(levelNumber) {
         levelMessage.textContent = `Level ${levelNumber}: ${levelMessages[levelNumber - 1]}`;
@@ -382,7 +378,7 @@
         successfulCycles = 0;
 
         if (levelNumber === 1) {
-            startButton.style.display = 'flex';
+            showIntroModal();
         } else {
             levelUpScreen.style.display = 'block';
         }
@@ -391,6 +387,14 @@
             showCelebrationScreen();
         }
     }
+
+    startGameButton.addEventListener('click', () => {
+        introModal.style.display = 'none';
+        gary.speed = difficultySpeeds[currentDifficulty];
+        gameStarted = true;
+        if (!isMuted) backgroundMusic.play();
+        requestAnimationFrame(update);
+    });
 
     continueLevelButton.addEventListener('click', () => {
         currentLevel++;
@@ -437,68 +441,3 @@
             gary.width * gary.scale,
             gary.height * gary.scale
         );
-    }
-
-    function resizeCanvas() {
-        const isPortrait = window.innerHeight > window.innerWidth;
-
-        if (isPortrait) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            angrySqueak.scale = 1.2;
-            gary.scale = 1.2;
-        } else {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            angrySqueak.scale = 1.5;
-            gary.scale = 1.5;
-        }
-
-        drawAngrySqueak();
-        drawGary();
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function update() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (!gameStarted) {
-            drawAngrySqueak();
-            return;
-        }
-
-        angrySqueak.y += angrySqueak.dy;
-        angrySqueak.dy += angrySqueak.gravity;
-
-        if (angrySqueak.y + angrySqueak.radius > canvas.height) {
-            angrySqueak.y = canvas.height - angrySqueak.radius;
-            angrySqueak.dy = 0;
-        }
-
-        gary.x -= gary.speed;
-
-        if (gary.x + gary.width <= 0) {
-            gary.x = canvas.width;
-            gary.y = Math.random() * (canvas.height - 50);
-            garyCrossed = false;
-        }
-
-        if (!garyCrossed &&
-            angrySqueak.x + angrySqueak.radius > gary.x &&
-            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
-            angrySqueak.y + angrySqueak.radius < gary.y
-        ) {
-            successfulCycles++;
-            garyCrossed = true;
-
-            if (successfulCycles === 10) {
-                levelUp();
-            }
-        }
-
-        if (
-            angrySqueak.x + angrySqueak.radius > gary.x &&
-            angrySqueak.x - angrySqueak.radius < gary.x + gary.width &&
-            angrySque
