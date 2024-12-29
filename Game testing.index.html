@@ -378,7 +378,7 @@
         successfulCycles = 0;
 
         if (levelNumber === 1) {
-            showIntroModal();
+            introModal.style.display = 'block';
         } else {
             levelUpScreen.style.display = 'block';
         }
@@ -440,4 +440,3 @@
             gary.y,
             gary.width * gary.scale,
             gary.height * gary.scale
-        );
