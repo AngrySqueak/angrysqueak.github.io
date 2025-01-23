@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,33 +7,234 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AngrySqueak Game</title>
     <style>
-        /* Existing CSS code */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100vh;
+            margin: 0 auto;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-image: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%20%3A%20the%20background%20gif%20.gif');
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .social-icons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icons a i {
+            font-size: 20px;
+            color: #000;
+        }
+
+        .social-icons a.angry-squeak {
+            background-image: url('https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #mute-button, #difficulty-button, #start-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background-color: #ff5722;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        #difficulty-button {
+            right: 100px;
+        }
+
+        #start-button {
+            right: 200px;
+        }
+
+        #game-over, #level-up {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        #play-again, #continue-level {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #ff5722;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #celebration-screen {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 128, 0, 0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        /* Media queries for responsive design */
+        @media (max-width: 768px) {
+            #game-container {
+                height: 80vh;
+            }
+
+            .social-icons {
+                top: 5px;
+                left: 5px;
+            }
+
+            .social-icons a {
+                width: 30px;
+                height: 30px;
+            }
+
+            #mute-button, #difficulty-button, #start-button {
+                top: 5px;
+                right: 5px;
+                padding: 5px;
+                font-size: 14px;
+            }
+
+            #difficulty-button {
+                right: 80px;
+            }
+
+            #start-button {
+                right: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #game-container {
+                height: 70vh;
+            }
+
+            .social-icons {
+                top: 3px;
+                left: 3px;
+            }
+
+            .social-icons a {
+                width: 25px;
+                height: 25px;
+            }
+
+            #mute-button, #difficulty-button, #start-button {
+                top: 3px;
+                right: 3px;
+                padding: 3px;
+                font-size: 12px;
+            }
+
+            #difficulty-button {
+                right: 60px;
+            }
+
+            #start-button {
+                right: 110px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div id="game-container">
-    <!-- Existing HTML code -->
-    <button id="start-button"><i class="fas fa-play"></i> Start</button>
-    <canvas id="gameCanvas"></canvas>
-    <div id="game-over">
-        <h2>Game Over</h2>
-        <button id="play-again"><i class="fas fa-redo"></i> Play Again</button>
-    </div>
-    <!-- Existing HTML code -->
-</div>
-     <!-- Existing HTML code -->
-    <button id="start-button"><i class="fas fa-play"></i> Start</button>
-    <canvas id="gameCanvas"></canvas>
-    <div id="game-over">
-        <h2>Game Over</h2>
-        <button id="play-again"><i class="fas fa-redo"></i> Play Again</button>
-    </div>
-    <!-- New icon for Solana Blockchain token purchase -->
-    <div id="token-purchase">
-        <a href="https://pump.fun/coin/58PHgFvkSzH1RT1mTBKC85DVcFzUgDm2fKceioxfpump" target="_blank">
-            <img src="https://raw.githubusercontent.com/AngrySqueak/AngrySqueakGame-V2/a27c4b3067d9d6897bc6c9858b607a2394268043/AngrySqueak%3A%20the%20circle%20gif.gif" alt="Buy Token">
+    <div class="social-icons">
+        <a href="https://x.com/AngrySqueak" target="_blank">
+            <i class="fab fa-twitter"></i>
         </a>
+        <a href="https://linktr.ee/angrysqueak" target="_blank" class="angry-squeak">
+        </a>
+        <a href="https://www.instagram.com/angrysqueakfrog/" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://angrysqueak.com/AngrySqueakGame-V2/angrysqueak_whitepaper.html" target="_blank">
+            <i class="fas fa-file-alt"></i>
+        </a>
+    </div>
+
+    <button id="mute-button"><i class="fas fa-volume-mute"></i> Mute</button>
+    <button id="difficulty-button"><i class="fas fa-tachometer-alt"></i> Easy</button>
+    <button id="start-button"><i class="fas fa-play"></i> Start</button>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="game-over">
+        <h2>Game Over</h2>
+        <button id="play-again"><i class="fas fa-redo"></i> Play Again</button>
+    </div>
+
+    <div id="level-up">
+        <h2 id="level-message"></h2>
+        <button id="continue-level"><i class="fas fa-arrow-right"></i> Continue</button>
+    </div>
+
+    <div id="celebration-screen">
+        <h2>Congratulations!</h2>
+        <p>You finished all levels!</p>
+        <ul>
+            <li>Level 1: "You are not a Huckster!"</li>
+            <li>Level 2: "You are not a Fraudster!"</li>
+            <li>Level 3: "You are not a Scam Artist!"</li>
+            <li>Level 4: "You are not a Ponzi Scheme!"</li>
+        </ul>
     </div>
 </div>
 
@@ -104,7 +306,7 @@
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         backgroundMusic.muted = isMuted;
-        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i> Unmute' : '<i class="fas fa-volume-mute'></i> Mute';
+        muteButton.innerHTML = isMuted ? '<i class="fas fa-volume-up"></i> Unmute' : '<i class="fas fa-volume-mute"></i> Mute';
     });
 
     difficultyButton.addEventListener('click', () => {
@@ -314,5 +516,3 @@
 
     playAgainButton.addEventListener('click', resetGame);
 </script>
-</body>
-</html>
